@@ -12,13 +12,25 @@ Currently **oppa!** has scripts for following languages:
 ## How to use?
 
 Copy the oppa.m file to the source folder of your data, or add oppa.m's path. Then call
-''oppa(X)''
-for performance measure matrix X.
+```matlab
+oppa(X);
+```
+for performance measure matrix `X`.
+
+## Sample Code
+```matlab
+A=1+rand(100,10)*100;
+A(A(:,:)>60)=inf;
+oppa(A);
+```
+gives
+following output:
+
 
 ## Test
 
 In the test folder, run
-''randtest''.
+`randtest`.
 
 ## References
 Dolan, Elizabeth D., and Jorge J. Moré. "Benchmarking optimization software with performance profiles." Mathematical programming 91.2 (2002): 201-213.
