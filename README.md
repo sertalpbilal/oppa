@@ -25,7 +25,7 @@ oppa(A);
 ```
 gives
 following output:
-
+![output](https://raw.githubusercontent.com/sertalpbilal/oppa/master/images/oppa_output.png)
 
 ## Test
 
