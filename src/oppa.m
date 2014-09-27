@@ -35,7 +35,45 @@
 % 
 
 
-[scaledX, stairsX] = oppa(X, algs, varargin)
-
-
+function [scaledX, stairsX] = oppa(X, algs, varargin)
+    % Eliminate entries with zero
+    X(X(:,:)==0)=inf;
+    % Scale every row by dividing its minimum
+    scaledX = bsxfun(@rdivide,X,min(X')');
+    % Select a border
+    upperborder = ceil(max(scaledX(scaledX(:,:)<Inf)));
+    % Sort the columns
+    stairsX = sort(scaledX);
+    % Value array
+    stairsX = [ones(1,size(X,2)); stairsX; upperborder*ones(1,size(X,2))];
+    % Generate the graphic
+    hold all
+    %linestyles = {'-',':','-.','--'};
+    %markers = {'none','o','x','+','*','s','d','v','^','<','>','p','h','.',...
+    %'+','*'}
+    set(0,'DefaultAxesColorOrder','remove');
+    set(0,'DefaultAxesLineStyleOrder','-|--|:|-.');
+    % Handle the inf
+    stairsX(stairsX(:,:)==inf)=upperborder;
+    for i=1:size(X,2)
+        A = [cumsum(stairsX(:,i)<upperborder)-1]/size(X,1);
+        B = stairsX(:,i);
+        stairs(B, A);
+    end
+    % Correct the limits
+    xlim([1 upperborder]);
+    ylim([0 1]);
+    set(gca,'xscale','log');
+    set(gca,'xtick',2.^(1:log2(upperborder)));
+    legend('Location','BestOutside');
+    title('Log_2 Scaled Performance Profile');
+    ylabel('P((log_2 (r_{p,s}) \leq \tau: 1 \leq s \leq n_s )');
+    xlabel('\tau');
+    box on;
+    
+    hold off
+    
 return
+
+
+
