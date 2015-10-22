@@ -36,6 +36,17 @@
 
 
 function [scaledX, stairsX] = oppa(X, algs, varargin)
+    % Control algs
+    legendX = {};
+    if(exist('algs','var'))
+        for i=1:size(X,2)
+            legendX{i} = algs(i,:);
+        endfor
+    else
+        for i=1:size(X,2) 
+            legendX{i} = strcat('Algorithm', int2str(i));
+        endfor
+    endif
     % Eliminate entries with zero
     X(X(:,:)==0)=inf;
     % Scale every row by dividing its minimum
@@ -48,28 +59,30 @@ function [scaledX, stairsX] = oppa(X, algs, varargin)
     stairsX = [ones(1,size(X,2)); stairsX; upperborder*ones(1,size(X,2))];
     % Generate the graphic
     hold all
-    %linestyles = {'-',':','-.','--'};
+    linestyles = {'--','-',':','-.'};
     %markers = {'none','o','x','+','*','s','d','v','^','<','>','p','h','.',...
     %'+','*'}
+    %set(gca, 'LineStyleOrder', {'-', ':', '--', '-.'}); % different line styles
     set(0,'DefaultAxesColorOrder','remove');
-    set(0,'DefaultAxesLineStyleOrder','-|--|:|-.');
     % Handle the inf
     stairsX(stairsX(:,:)==inf)=upperborder;
     for i=1:size(X,2)
         A = [cumsum(stairsX(:,i)<upperborder)-1]/size(X,1);
         B = stairsX(:,i);
-        stairs(B, A);
+        mplot = stairs(B, A,'LineStyle',linestyles{mod(i,4)+1}, 'LineWidth', 2);
     end
     % Correct the limits
     xlim([1 upperborder]);
     ylim([0 1]);
+    set(gca,'FontSize',14)
     set(gca,'xscale','log');
     set(gca,'xtick',2.^(1:log2(upperborder)));
-    legend('Location','BestOutside');
+    legend(legendX,'Location','BestOutside');
     title('Log_2 Scaled Performance Profile');
     ylabel('P((log_2 (r_{p,s}) \leq \tau: 1 \leq s \leq n_s )');
     xlabel('\tau');
     box on;
+    set(gcf,'units','points','position',[10,10,800,600]);
     
     hold off
     
