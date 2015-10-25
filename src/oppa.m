@@ -40,13 +40,13 @@ function [scaledX, stairsX] = oppa(X, algs, varargin)
     legendX = {};
     if(exist('algs','var'))
         for i=1:size(X,2)
-            legendX{i} = algs(i,:);
-        endfor
+            legendX = algs;
+        end
     else
         for i=1:size(X,2) 
             legendX{i} = strcat('Algorithm', int2str(i));
-        endfor
-    endif
+        end
+    end
     % Eliminate entries with zero
     X(X(:,:)==0)=inf;
     % Scale every row by dividing its minimum
